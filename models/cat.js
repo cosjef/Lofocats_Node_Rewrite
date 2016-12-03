@@ -1,14 +1,14 @@
-// Mongoose import
+// Mongoose import into the app
 var mongoose = require('mongoose')
 
  // Mongoose schema definition
-var Schema = mongoose.Schema;
+// var Schema = mongoose.Schema;
 
-var catSchema = new Schema({
+var catSchema = new mongoose.Schema({
 	// ObjectId is the unique ID of this stored object in Mongo
 	// defines the fields that are required for a particular user
-    
-    //id: ObjectId,
+ 
+
     breed: String,
     color: String,
     longitude: Number,
@@ -32,4 +32,12 @@ module.exports = CatModel;
 */
 
 // Mongoose model definition
-module.exports = mongoose.model('cat', catSchema);
+// Compile a 'Cat' model using the catSchema as the structure.
+// Mongoose also creates a MongoDB collection called 'Cats' for these documents
+//    module.exports = mongoose.model('Cats', catSchema);
+
+
+mongoose.model('cats', catSchema);
+module.exports = mongoose.model('Cats', catSchema);
+
+//var Cat = mongoose.model('Cats', catSchema);

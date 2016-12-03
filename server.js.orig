@@ -2,12 +2,18 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var morgan = require('morgan');
-//var Cat = require('./models/cat.js');
+var Cat = require('./models/cat.js');
 
 
 // get an instance of the express Router
-//router = express.Router();
+router = express.Router();
 
+// Bootstrap express
+var app = express();
+
+
+// use morgan to log requests to the console
+app.use(morgan('combined'));
 
 
 /*test the connection and ability to retrieve the collection
@@ -24,42 +30,14 @@ connection.once('open', function () {
 });
 */
 
-/* check that the connection is open
+// check that the connection is open
 mongoose.connection.on("open", function(){
   console.log("mongodb is connected!!");
 });
-*/
 
 // connect to Mongo when the app initializes
 //  mongo -u testuser -p testpass ds111748.mlab.com:11748/lofocats
 mongoose.connect('mongodb://testuser:testpass@ds111748.mlab.com:11748/lofocats');
-
-var Schema = mongoose.Schema;
-var catSchema = new Schema({
-	// ObjectId is the unique ID of this stored object in Mongo
-	// defines the fields that are required for a particular user
-    
-    //id: ObjectId,
-    breed: String,
-    color: String,
-    longitude: Number,
-	latitude: Number,
-    contact_phone: String,
-	contact_email: String,
-	event_date: String,
-	entry_type: String,
-	photo_url: String
-});
-
-
-var Cat = mongoose.model('Cats', catSchema);
-
-
-// Bootstrap express
-var app = express();
-
-// use morgan to log requests to the console
-app.use(morgan('combined'));
 
 
 // all routes will be prefixed with /api
@@ -77,14 +55,15 @@ app.get('/', function(req, res) {
 		
 // app.get(path, callback)
 // callback function takes two arguments: request and response object
-app.get('/', function (req, res) {
-	Cat.find({}, function (err, cats) {	
+app.get("/", function(req, res) {
+	// find all cats
+	Cat.find(function(err, cats) {	
 
 		if (err)
 			res.send(err);
 		
 	
-		res.send(cats);
+		res.json(cats);
 	});
 });
 		
