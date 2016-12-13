@@ -4,11 +4,10 @@ var mongoose = require('mongoose')
  // Mongoose schema definition
 // var Schema = mongoose.Schema;
 
-var catSchema = new mongoose.Schema({
+var CatSchema = new mongoose.Schema({
 	// ObjectId is the unique ID of this stored object in Mongo
 	// defines the fields that are required for a particular user
  
-
     breed: String,
     color: String,
     longitude: Number,
@@ -37,7 +36,9 @@ module.exports = CatModel;
 //    module.exports = mongoose.model('Cats', catSchema);
 
 
-mongoose.model('cats', catSchema);
-module.exports = mongoose.model('Cats', catSchema);
+//mongoose.model('cats', catSchema);
+module.exports = mongoose.model('Cat', CatSchema);
 
-//var Cat = mongoose.model('Cats', catSchema);
+
+// var cat = mongoose.model('Cat', CatSchema);
+// module.exports = cat;

@@ -11,6 +11,8 @@ router = express.Router();
 // Bootstrap express
 var app = express();
 
+// Create a database variable outside of the database connection callback to reuse the connection pool in your app.
+var db;
 
 // use morgan to log requests to the console
 app.use(morgan('combined'));
@@ -32,7 +34,7 @@ connection.once('open', function () {
 
 
 
-// check that the connection is open
+// check that the database connection is open
 mongoose.Promise = global.Promise;
 mongoose.connection.on("open", function(){
   console.log("Mongodb is connected!!");
@@ -40,7 +42,8 @@ mongoose.connection.on("open", function(){
 
 // connect to Mongo when the app initializes
 //  mongo -u testuser -p testpass ds111748.mlab.com:11748/lofocats
-mongoose.connect('mongodb://testuser:testpass@ds111748.mlab.com:11748/lofocats');
+db = mongoose.connect('mongodb://testuser:testpass@ds111748.mlab.com:11748/lofocats');
+
 
 
 // all routes will be prefixed with /api
@@ -59,15 +62,15 @@ app.get('/', function(req, res) {
 // app.get(path, callback)
 // callback function takes two arguments: request and response object
 // GET all cats
-app.get("/cat_entries", function (req, res) {
+app.get('/cat_entries', function (req, res) {
 	// find all cats
-	Cat.find(function(err, cats) {	
+	Cat.find(function(err, Cat) {	
 
 		if (err)
 			res.send(err);
 		
 	
-		res.json(cats);
+		res.json(Cat);
 	});
 });
 		
@@ -75,8 +78,8 @@ app.get("/cat_entries", function (req, res) {
 // GET a single cat
 app.get('/cat_entries/:id', function (req, res) {
 	if (req.params.id) {
-		Cat.findOne({ _id: req.params.id }, function (err, cats) {
-	res.json(cats);
+		Cat.findOne({ _id: req.params.id }, function (err, Cats) {
+	res.json(Cats);
 })
 	}
 });
@@ -88,35 +91,37 @@ app.use(bodyParser.json());
 // support encoded bodies
 app.use(bodyParser.urlencoded({ extended: true}));
 
+
+
 // POST endpoint
-app.post('/cat_entries/:id', function (req, res) {
-	var Cats = new Cat 
+app.post('/cat_entries', function(req, res, next) {
+	
+	
+	console.log(req.body);                              
+	
+	var cats = new Cat();  
 
-	// set the properties of the cat object to what we get from the inbound request
 	// req.body is an array of objects
-	Cats.breed = req.body.breed;
-    Cats.color = req.body.color;
-  	Cats.longitude = req.body.longitude;
-  	Cats.latitude = req.body.latitude;
-  	Cats.contact_phone = req.body.contact_phone;
-  	Cats.contact_email = req.body.contact_email;
-  	Cats.event_date = req.body.event_date;
- 	Cats.entry_type = req.body_entry_type;
-  	Cats.photo_url = req.body.photo_url;
+	cats.breed = req.body.breed;
+    cats.color = req.body.color;
+  	cats.longitude = req.body.longitude;
+  	cats.latitude = req.body.latitude;
+  	cats.contact_phone = req.body.contact_phone;
+  	cats.contact_email = req.body.contact_email;
+  	cats.event_date = req.body.event_date;
+ 	cats.entry_type = req.body_entry_type;
+  	cats.photo_url = req.body.photo_url;  
 
-  	console.log('POST body variables: ' + Cats.breed + ' ' + Cats.photo_url);
-
-  	// save the cat and check for errors
-  	Cats.save(function(err,Cats) {
+  	cats.save(function(err) {
   		if (err) {
-  			res.send(err);
-
-  		//res.send({ message: 'Cat created!'});
-  		res.json(201, Cats)
+  			res.send("There was a problem adding the information to the database.");
   		}
   	});
-});
-	
+
+  		res.send({ message: 'Cat created!'});
+  		//res.json(201, Cats)
+
+	});
 
 /* delete a cat 
 app.delete('/cat_entries/:id', function(req, res) {
