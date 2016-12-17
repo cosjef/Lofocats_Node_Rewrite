@@ -2,7 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var morgan = require('morgan');
-var Cat = require('./models/cat.js');
+var cat = require('./models/cat.js');
 
 
 // get an instance of the express Router
@@ -64,13 +64,13 @@ app.get('/', function(req, res) {
 // GET all cats
 app.get('/cat_entries', function (req, res) {
 	// find all cats
-	Cat.find(function(err, Cat) {	
+	cat.find(function(err, cat) {	
 
 		if (err)
 			res.send(err);
 		
 	
-		res.json(Cat);
+		res.json(cat);
 	});
 });
 		
@@ -78,8 +78,8 @@ app.get('/cat_entries', function (req, res) {
 // GET a single cat
 app.get('/cat_entries/:id', function (req, res) {
 	if (req.params.id) {
-		Cat.findOne({ _id: req.params.id }, function (err, Cats) {
-	res.json(Cats);
+		cat.findOne({ _id: req.params.id }, function (err, cats) {
+	res.json(cats);
 })
 	}
 });
@@ -99,7 +99,7 @@ app.post('/cat_entries', function(req, res, next) {
 	
 	console.log(req.body);                              
 	
-	var cats = new Cat();  
+	var cats = new cat();  
 
 	// req.body is an array of objects
 	cats.breed = req.body.breed;
@@ -119,24 +119,49 @@ app.post('/cat_entries', function(req, res, next) {
   	});
 
   		res.send({ message: 'Cat created!'});
-  		//res.json(201, Cats)
+
 
 	});
 
-/* delete a cat 
+// DELETE endpoint to delete a cat 
 app.delete('/cat_entries/:id', function(req, res) {
-	// check the length of the quote 
-	// ensure we don't delete something that is not there
-	if(quotes.length <= req.params.id) {
-		res.statusCode = 404;
-		return res.send('Error 404: No quote found');
-	}
-	// if quote is new, splice the array to remove the quote, and return true to the client
-	// splice method adds/removes items to/from an array
-	quotes.splice(req.params.id, 1);
-	res.json(true);
-});
-*/
+     cat.remove({
+              _id: req.params.cat_id
+            }, function (err, cat) {
+              if (err) return res.send(err);
+              res.json({ message: 'Cat Succesfully Deleted'});
+          });
+      });
+
+
+// PUT endpoint to update a cat
+// Uses Mongoose to PUT updates for Blog Posts by _id in database
+        app.put('/cat_entries/:id', function(req, res) {
+             cat.findById(req.params.id, function (err, cat) {
+              if (err) 
+              	res.send(err);
+
+              cat.contact_email = req.body.contact_email;
+              
+              /*
+              if (req.body.breed) cat.breed = req.body.breed;
+              if (req.body.color) cat.color = req.body.color;
+              if (req.body.longitude) cat.longitude = req.body.longitude;
+              if (req.body.latitude) cat.latitude = req.body.latitude;
+              if (req.body.contact_phone) cat.contact_phone = req.body.contact_phone;
+              if (req.body.contact_email) cat.contact_email = req.body.contact_email;
+              if (req.body.event_date) cat.event_date = req.body.event_date;
+              if (req.body.entry_type) cat.entry_type = req.body.entry_type;
+              if (req.body.photo_url) cat.photo_url = req.body.photo_url;
+              */
+
+              cat.save(function (err) {
+                if (err) 
+                	send (err);
+                res.json({ message: 'Cat Updated!'});
+              });
+            });
+          });
 
 
 // set our PORT
