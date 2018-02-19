@@ -15,7 +15,8 @@ var catRoutes = require('./routes/catRoutes');
 var router = express.Router();
 
 // use morgan to log requests to the console
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
+app.use(morgan('dev'));
 
 // =======================================================================================================================
 // The order you place your middleware and routes is very important; everything will happen in the order that they appear.
@@ -29,11 +30,12 @@ app.use(morgan('combined'));
 // you can add layers to the middleware stack by calling .use
 // use is a method to configure the middleware used by the routes of the Express HTTP server object
 // Middleware function is executed when the base path matches.
+// middleware happens on every request - it does something before the request is processed
 // app.use() mounts the middleware function to a specified path
 // app.use('/cat_entries', CatController);
 // =======================================================================================================================
 
-
+/*
 var bodyParser = require('body-parser');
 // Express v4 removed all middleware to be minimalistic, so Express can’t process URL encoded forms
 // this lets us get data from a POST
@@ -42,6 +44,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 // extract JSON data from a request
 app.use(bodyParser.json());
+*/
 
 
 // append CORS headers to incoming request to prevent CORS errors
@@ -55,9 +58,11 @@ if (req.method === 'OPTIONS') {
     // provide the answer to the browser
     return res.status(200).json({});
     }
-    // call next to ensure we don't block requests and move to other routes
+    // call next() to ensure we don't block requests and move to other routes
+    // continue doing what we were doing and go to the route
     next();
 });
+
 
 // routes which should handle requests
 // This is middleware
@@ -67,11 +72,11 @@ if (req.method === 'OPTIONS') {
 app.use('/cats', catRoutes);
 
 // Error handler to handle any requests that get past the routes above
-// No route was able to handle this request.
+// Used when no route was able to handle the request
 // If you reach this line, it means no route was able to handle the request
 app.use((req, res, next) => {
     // Error object is available by default
-    const error = new Error('Not found');
+    const error = new Error('Route not found');
     error.status = 404;
     next(error);
 })
