@@ -39,7 +39,7 @@ var catSchema = new mongoose.Schema( {
 // something else can access the model
 // any file requiring this model file will have access to the Cats object
 // compile our schema into a model
-
+// =============================================================================
 
 // export the schema wrapped into a model
 // first argument is the name of the model as you want to use it internally

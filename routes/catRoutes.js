@@ -28,29 +28,9 @@ router.use(bodyParser.json());
 // =======================================================================================================================
 // Routes are listed below
 // router.get(path, callback)
-// Add a GET test route by calling router.METHOD
+// Add a route by calling router.METHOD
 // callback function takes two arguments: request and response object
 // =======================================================================================================================
-
-// get all cats in database
-// get something when calling the root url for cat endpoint
-// if you put /cat here by accident instead of /, the request would look like /cat/cat
-router.get('/', (req, res,next) => {
-    // find without arguments returns everything
-    //const cat = new Cat;
-    Cat.find()
-    .exec()
-    .then(Cats => {
-        console.log(Cat);
-        res.status(200).json(Cats);
-})
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({
-            error: err
-        });
-    });
-
 
 
 router.post('/', (req, res, next) => {
@@ -64,7 +44,7 @@ router.post('/', (req, res, next) => {
         state: req.body.state,
         photo_url: req.body.photo_url
     });
-    console.log(cat);
+    // console.log(cat);
     // save method stores the POST data in the database
     cat.save(function (err) {
         if (err) {
@@ -72,8 +52,8 @@ router.post('/', (req, res, next) => {
         }
     });
      res.status(200).json({
-        message: "Handling POST requests to /cat",
-        createdCat: cat
+        message: "Cat created successfully!" 
+        //createdCat: cat
     });
 });
 
@@ -85,23 +65,23 @@ router.get('/:id', function (req, res) {
     // console.log(req.params.id);
     if (req.params.id) {
         // findById is a convenience method on the model that's provided by Mongoose to find a document by its _id
-        Cat.findById( {_id: req.params.id}, function (err, cat) {
-                if (err) {
-                    res.status(500).send(err)
-                }
-                if (cat) {
-                    res.status(200).send(cat)
-                } else {
-                    res.status(404).send("No cat found with that ID")
-                }
-            
-        })
+        Cat.findById({ _id: req.params.id }, function (err, cat) {
+            if (err) {
+                res.status(500).send(err)
+            }
+            if (cat) {
+                res.status(200).send(cat)
+            } else {
+                res.status(404).send("No cat found with that ID")
+            }
+
+        });
     }
- });
 });
 
 
 
+// Update a cat
 router.put('/:id', function (req, res) {
     Cat.findOne({ _id: req.params.id }, function (err, cat) {
         if (err) {
@@ -123,6 +103,38 @@ router.put('/:id', function (req, res) {
 
         });
     });
+});
+
+// get all cats in database
+// get something when calling the root url for cat endpoint
+// if you put /cat as the root here by accident instead of /, the resulting request would look like /cat/cat
+router.get('/', function (req, res) {
+    Cat.find(function(err, cats) {
+        if (err) {
+            res.send(err);
+        }
+        res.json(cats);
+                
+    });
+});
+
+
+// Delete a cat
+router.delete('/:id', (req, res, next) => {
+    const id = req.params.id;
+    Cat.findByIdAndRemove({ _id: req.params.id }, function (err, response) {
+
+        if (err) {
+            res.status(500).send(err)
+            //console.log(err);
+        }
+        if (response) {
+            // res.status(200).json(response);
+            res.json({ message: "Cat with ID " + req.params.id + " deleted." });
+        } else {
+            res.status(404).send("Could not find cat to delete")
+        }
+    })
 });
 
 
