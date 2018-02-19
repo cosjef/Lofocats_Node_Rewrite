@@ -34,6 +34,31 @@ app.use(morgan('combined'));
 // =======================================================================================================================
 
 
+var bodyParser = require('body-parser');
+// Express v4 removed all middleware to be minimalistic, so Express can’t process URL encoded forms
+// this lets us get data from a POST
+// enable parsing of content-type application/x-www-form-urlencoded
+// "true" allows you to parse extended, rich POST bodies
+app.use(bodyParser.urlencoded({ extended: true }));
+// extract JSON data from a request
+app.use(bodyParser.json());
+
+
+// append CORS headers to incoming request to prevent CORS errors
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin","*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+// check the presence of the OPTIONS method from the web browser
+if (req.method === 'OPTIONS') {
+    // tell the browser what verbs they can send
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+    // provide the answer to the browser
+    return res.status(200).json({});
+    }
+    // call next to ensure we don't block requests and move to other routes
+    next();
+});
+
 // routes which should handle requests
 // This is middleware
 // every request is funneled through here

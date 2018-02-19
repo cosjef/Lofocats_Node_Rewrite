@@ -17,6 +17,9 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 
+
+
+
 // Add a GET test route by calling router.METHOD
 // router.get(path, callback)
 // callback function takes two arguments: request and response object
@@ -24,15 +27,28 @@ router.use(bodyParser.urlencoded({ extended: true }));
 // if you put /cat here by accident, the request would look like /cat/cat
 router.get('/', (req, res,next) => {
     res.status(200).json({
-        message: "Handling GET requests to /products"
+        message: "Handling GET requests to /cats"
     });
 });
 
 
 router.post('/', (req, res, next) => {
+    const cat = {
+        breed: req.body.breed,
+        color: req.body.color,
+        declawed: req.body.declawed,
+        city: req.body.city,
+        state: req.body.state,
+        photo_url: req.body.photo_url
+    };
+  
+ 
     res.status(200).json({
-        message: "Handling POST requests to /products"
+        message: "Handling POST requests to /cat",
+        createdCat: cat
     });
+
+  
 });
 
 

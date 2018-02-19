@@ -14,7 +14,10 @@ var bodyParser = require('body-parser');
 // this lets us get data from a POST
 router.use(bodyParser.json());
 //support parsing of content-type application/x-www-form-urlencoded
+// true allows you to parse extended, rich POST bodies
 router.use(bodyParser.urlencoded({ extended: true }));
+// extract JSON data from a request
+router.use(bodyParser.json());
 
 // Controller needs to interact with the data model
 var Cat = require('../models/catModel.js');
