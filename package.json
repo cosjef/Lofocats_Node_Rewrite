@@ -10,9 +10,14 @@
   "keywords": [
     "api"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cosjef/Lofocats_Node_Rewrite"
+  },
   "author": "Jeff Costa",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "jsonwebtoken": "^7.2.1",

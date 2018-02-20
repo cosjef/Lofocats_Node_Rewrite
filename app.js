@@ -9,7 +9,9 @@ var mongoose = require('mongoose');
 var morgan = require('morgan');
 var jwt = require('jsonwebtoken');
 var db = require('./config/database');
+const bodyParser = require("body-parser");
 var catRoutes = require('./routes/catRoutes');
+var userRoutes = require('./routes/user');
 
 // get an instance of the express Router
 var router = express.Router();
@@ -17,6 +19,8 @@ var router = express.Router();
 // use morgan to log requests to the console
 // app.use(morgan('combined'));
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // =======================================================================================================================
 // The order you place your middleware and routes is very important; everything will happen in the order that they appear.
@@ -35,7 +39,7 @@ app.use(morgan('dev'));
 // app.use('/cat_entries', CatController);
 // =======================================================================================================================
 
-
+/*
 // append CORS headers to incoming request to prevent CORS errors
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin","*");
@@ -51,14 +55,15 @@ if (req.method === 'OPTIONS') {
     // continue doing what we were doing and go to the route
     next();
 });
-
+*/
 
 // routes which should handle requests
 // This is middleware
 // every request is funneled through here
 // the first argument acts as a URL filter: requests that start with /cats will be handled by catRoutes
 // any request starting with /cats will be forwarded to the catRoutes file
-app.use('/cats', catRoutes);
+app.use("/cats", catRoutes);
+app.use("/user", userRoutes);
 
 // Error handler to handle any requests that get past the routes above
 // Used when no route was able to handle the request
