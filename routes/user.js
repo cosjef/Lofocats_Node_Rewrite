@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 // import user model
 const User = require("../models/user");
 
-
+// Add a new user
 router.post('/signup', function (req, res) { 
 var user = new User();
 User.findOne( { email: req.body.email }, function (err, user) {
@@ -39,6 +39,26 @@ User.findOne( { email: req.body.email }, function (err, user) {
             });
    
 });
+
+
+// Delete a user
+router.delete('/:id', (req, res, next) => {
+    const id = req.params.id;
+    User.findByIdAndRemove({ _id: req.params.id }, function (err, response) {
+
+        if (err) {
+            res.status(500).send(err)
+            //console.log(err);
+        }
+        if (response) {
+            // res.status(200).json(response);
+            res.json({ message: "User with ID " + req.params.id + " deleted." });
+        } else {
+            res.status(404).send("Could not find user to delete")
+        }
+    })
+});
+
 
 
 module.exports = router;
