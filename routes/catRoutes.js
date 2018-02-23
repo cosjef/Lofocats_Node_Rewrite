@@ -3,7 +3,6 @@
 // Controllers contain handler functions that are executed when the route is matched.
 // Routes need to be connected or linked to a controller
 
-
 var express = require('express');
 
 // get an instance of the express Router
@@ -11,6 +10,9 @@ var router = express.Router();
 
 // bring in the Cat model
 const Cat = require('../models/catModel');
+
+// bring in the JWT middleware to check JWT authentication
+const checkAuth = require('../config/check-auth');
 
 // need mongoose to be able to create new model object
 var mongoose = require('mongoose');
@@ -33,7 +35,7 @@ router.use(bodyParser.json());
 // =======================================================================================================================
 
 
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
     // store the data in the database
     // create a new instance of the cat model    
     const cat = new Cat( {

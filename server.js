@@ -10,6 +10,6 @@ var port = process.env.PORT || 3000;
 // start the server
 var server = app.listen(port, function () {
     // print the JWT
-    console.log(process.env.JWT_KEY)
+    //console.log(process.env.JWT_KEY)
     console.log('Express server running on ' + port);
 });
