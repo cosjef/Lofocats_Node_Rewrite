@@ -7,7 +7,6 @@ var app = express();
 
 var mongoose = require('mongoose');
 var morgan = require('morgan');
-var jwt = require('jsonwebtoken');
 var db = require('./config/database');
 const bodyParser = require("body-parser");
 var catRoutes = require('./routes/catRoutes');
