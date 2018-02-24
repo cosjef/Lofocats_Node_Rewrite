@@ -11,7 +11,7 @@ var router = express.Router();
 // bring in the JWT middleware to check JWT authentication
 const checkAuth = require('../config/check-auth');
 
-//import the controller for cat
+//import the controller for cat in the route file
 const catController = require('../controllers/catController');
 
 var bodyParser = require('body-parser');
