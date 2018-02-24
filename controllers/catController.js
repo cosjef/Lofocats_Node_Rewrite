@@ -1,102 +1,128 @@
-// Controllers provides the logic used in routes
+// Controllers provide the logic used in routes
 
-var express = require('express');
-// Bootstrap express
-// create express app
-var app = express();
-var app = express();
+// Get Mongoose ready
+const mongoose = require("mongoose");
 
-// get an instance of the express Router
-var router = express.Router();
-
-var bodyParser = require('body-parser');
-// Express v4 removed all middleware to be minimalistic, so Express can’t process URL encoded forms
-// this lets us get data from a POST
-router.use(bodyParser.json());
-//support parsing of content-type application/x-www-form-urlencoded
-// true allows you to parse extended, rich POST bodies
-router.use(bodyParser.urlencoded({ extended: true }));
-// extract JSON data from a request
-router.use(bodyParser.json());
-
-// Controller needs to interact with the data model
-var Cat = require('../models/catModel.js');
+// bring in the Cat model
+// the controller needs to access the model
+const Cat = require('../models/catModel');
 
 
-// Add a GET test route by calling app.METHOD
-// app.get(path, callback)
+// router.get(path, callback)
+// Add a route by calling router.METHOD
 // callback function takes two arguments: request and response object
-// get something when calling the root url
-router.get('/', function (req, res) {
-    //res.send("This is the default / route");
-    res.json({ message: "Welcome to the cats API" });
-});
 
-
-
-router.use((req, res, next) => {
+// export, then give it a name, then start the route
+// exports.name_you_create = (req, res, next) => 
+exports.cat_create_cat = (req, res, next) => {
+    // store the data in the database
+    // create a new instance of the cat model    
+    const cat = new Cat({
+        breed: req.body.breed,
+        color: req.body.color,
+        declawed: req.body.declawed,
+        city: req.body.city,
+        state: req.body.state,
+        photo_url: req.body.photo_url
+    });
+    // console.log(cat);
+    // save method stores the POST data in the database
+    cat.save(function (err) {
+        if (err) {
+            res.send('There was a problem adding the cat to the database');
+        }
+    });
     res.status(200).json({
-        message: 'It works!'
-    });
-});
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-exports.findById = function(req, res){
-var id = req.params.id;
-Cat.findOne({'_id':id},function(err, result) {
-    return res.send(result);
-});
-};
-
-exports.add = function(req, res) {
-Cat.create(req.body, function (err, cat) {
-    if (err) return console.log(err);
-    return res.send(cat);
-});
-};
-
-exports.update = function(req, res) {
-var id = req.params.id;
-var updates = req.body;
-
-Cat.update({"_id":id}, req.body,
-    function (err, numberAffected) {
-        if (err) return console.log(err);
-        console.log('Updated %d cats', numberAffected);
-        return res.send(202);
+        message: "Cat created successfully!"
+        //createdCat: cat
     });
 };
 
-exports.delete = function(req, res){
-var id = req.params.id;
-Cat.remove({'_id':id},function(result) {
-    return res.send(result);
-});
+// GET a single cat
+exports.get_one_cat = (req, res) => {
+    var cat = new Cat();
+    // console.log(cat);
+    // console.log(req.params.id);
+    if (req.params.id) {
+        // findById is a convenience method on the model that's provided by Mongoose to find a document by its _id
+        Cat.findById({ _id: req.params.id }, function (err, cat) {
+            if (err) {
+                res.status(500).send(err)
+            }
+            if (cat) {
+                res.status(200).send(cat)
+            } else {
+                res.status(404).send("No cat found with that ID")
+            }
+
+        });
+    }
 };
 
+// Update a single cat
+exports.update_a_cat = function (req, res) {
+    Cat.findOne({ _id: req.params.id }, function (err, cat) {
+        if (err) {
+            return res.send(err);
+        }
 
-exports.import = function(req, res){
-Cat.create(
-    { "breed": "persian", "color": "white", "declawed": "yes", "city": "Boston", "state": "MA","photo_url": "https://vetstreet.brightspotcdn.com/dims4/default/8ab3754/2147483647/thumbnail/645x380/quality/90/?url=https%3A%2F%2Fvetstreet-brightspot.s3.amazonaws.com%2Ff7%2F3b%2Fa9263b9846c7a943e56b9c10f099%2FPersian-AP-0IUWP7-645sm3614.jpg" },
-    { "breed": "Maine Coon.","color": "calico", "declawed": "yes","city": "San Francisco","state": "GA","photo_url": "http://cdn1-www.cattime.com/assets/uploads/gallery/maine-coon-cats-and-kittens/maine-coon-cats-and-kittens-1.jpg" },
-    { "breed": "Russian Blue", "color": "grey", "declawed": "yes","cit": "Detroit","state": "MI","photo_url": "https://metrouk2.files.wordpress.com/2017/06/57148496.jpg?w=748&h=497&crop=1" },
-    { "breed": "Bengal", "color": "black", "declawed": "no","city": "Buffao","state": "NY","photo_url": "https://vetstreet.brightspotcdn.com/dims4/default/4f4dea1/2147483647/crop/0x0%2B0%2B0/resize/645x380/quality/90/?url=https%3A%2F%2Fvetstreet-brightspot.s3.amazonaws.com%2F31%2F1ba400a28511e087a80050568d634f%2Ffile%2FBengal-3-645mk062211.jpg" }
-    , function (err) {
-        if (err) return console.log(err);
-        return res.send(202);
+        for (prop in req.body) {
+            cat[prop] = req.body[prop];
+        }
+
+        // save the cat
+        cat.save(function (err) {
+            if (err) {
+                return res.send(err);
+            }
+
+            // res.json( { message: 'Cat updated!' } );
+            res.json({ message: "Cat with ID " + req.params.id + " updated." });
+
+        });
     });
-};router.get('/import', Cat.import);
-*/
+};
 
-module.exports = router;
+// get all cats in database
+// get something when calling the root url for cat endpoint
+// if you put /cat as the root here by accident instead of /, the resulting request would look like /cat/cat
+exports.get_all_cats = function (req, res) {
+    Cat.find(function (err, cats) {
+        if (err) {
+            res.send(err);
+        }
+        res.json(cats);
+
+    });
+};
+
+// Delete a cat
+exports.delete_a_cat = function (req, res, next) {
+        const id = req.params.id;
+        Cat.findByIdAndRemove({ _id: req.params.id }, function (err, response) {
+
+            if (err) {
+                res.status(500).send(err)
+                //console.log(err);
+            }
+            if (response) {
+                // res.status(200).json(response);
+                res.json({ message: "Cat with ID " + req.params.id + " deleted." });
+            } else {
+                res.status(404).send("Could not find cat to delete")
+            }
+        })
+    };
+
+// Import a set of cats into the database
+exports.import_cats = function (req, res) {
+    Cat.create(
+        { "breed": "persian", "color": "white", "declawed": "yes", "city": "Boston", "state": "MA", "photo_url": "https://vetstreet.brightspotcdn.com/dims4/default/8ab3754/2147483647/thumbnail/645x380/quality/90/?url=https%3A%2F%2Fvetstreet-brightspot.s3.amazonaws.com%2Ff7%2F3b%2Fa9263b9846c7a943e56b9c10f099%2FPersian-AP-0IUWP7-645sm3614.jpg" },
+        { "breed": "Maine Coon.", "color": "calico", "declawed": "yes", "city": "San Francisco", "state": "GA", "photo_url": "http://cdn1-www.cattime.com/assets/uploads/gallery/maine-coon-cats-and-kittens/maine-coon-cats-and-kittens-1.jpg" },
+        { "breed": "Russian Blue", "color": "grey", "declawed": "yes", "cit": "Detroit", "state": "MI", "photo_url": "https://metrouk2.files.wordpress.com/2017/06/57148496.jpg?w=748&h=497&crop=1" },
+        { "breed": "Bengal", "color": "black", "declawed": "no", "city": "Buffao", "state": "NY", "photo_url": "https://vetstreet.brightspotcdn.com/dims4/default/4f4dea1/2147483647/crop/0x0%2B0%2B0/resize/645x380/quality/90/?url=https%3A%2F%2Fvetstreet-brightspot.s3.amazonaws.com%2F31%2F1ba400a28511e087a80050568d634f%2Ffile%2FBengal-3-645mk062211.jpg" }
+        , function (err) {
+            if (err) return console.log(err);
+            res.status(202).send("Cats added to database");
+        });
+}; 
