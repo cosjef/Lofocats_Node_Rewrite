@@ -1,7 +1,8 @@
  # dotenv environment variables file
  .env
- .private
- .pub
+ 
+ *.private
+ *.pub
  
 +# next.js build output
 +.next
