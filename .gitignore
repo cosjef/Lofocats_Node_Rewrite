@@ -1,7 +1,11 @@
  # dotenv environment variables file
- .env
+ /*.env
  
 jwtRS256.key.*
  
 +# next.js build output
 +.next
+
+/node_modules
+npm-debug.log
+.DS_Store
