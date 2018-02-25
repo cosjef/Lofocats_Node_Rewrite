@@ -12,7 +12,7 @@ const Cat = require('../models/catModel');
 // Add a route by calling router.METHOD
 // callback function takes two arguments: request and response object
 
-// export, then give it a name, then start the route
+// exports, then give it a name, then start the route
 // exports.name_you_create = (req, res, next) => 
 exports.cat_create_cat = (req, res, next) => {
     // store the data in the database
