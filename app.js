@@ -29,6 +29,8 @@ app.use(bodyParser.json());
 // middleware functions are functions that have access to the request object (req), the response object (res) and the next middleware function in the request-response cycle
 // router is a sub-package of express that lets you conveniently handle different routes
 // use is a method that sets up middleware
+// Middleware is a piece of code, a function in Node.js, that acts as a bridge between some parts of your code.
+// When a request reaches an endpoint, the router has an option to pass the request on to the next middleware function in line
 // an incoming request has to go through app.use and what we pass to it
 // you can add layers to the middleware stack by calling .use
 // use is a method to configure the middleware used by the routes of the Express HTTP server object
