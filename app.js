@@ -5,6 +5,12 @@ var express = require('express');
 // create express app
 var app = express();
 
+// Turn on ZIP compression
+var compression = require('compression');
+app.use(compression());
+
+
+
 var mongoose = require('mongoose');
 var morgan = require('morgan');
 var db = require('./config/database');
