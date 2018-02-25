@@ -1,6 +1,6 @@
 var db = require('./config/database');
 var app = require('./app');
-require('dotenv').config();
+require('dotenv').config({ silent: true })
 
 
 // get the environment variable

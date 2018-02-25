@@ -1,8 +1,7 @@
  # dotenv environment variables file
  .env
  
- *.private
- *.pub
+jwtRS256.key.*
  
 +# next.js build output
 +.next
