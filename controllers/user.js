@@ -21,8 +21,8 @@ exports.user_login = (req, res, next) => {
         if (!user) return res.status(404).send('No user found.');
 
         var passwordIsValid = bcrypt.compare(req.body.password, user.password);
-        console.log('Password from request: ' + req.body.password);
-        console.log('Encrypted password:' + user.password);
+        //console.log('Password from request: ' + req.body.password);
+        //console.log('Encrypted password:' + user.password);
         if (!passwordIsValid) return res.status(401).send({ auth: false, token: null, message: 'password not matching' });
 
         // sign JWT with RSA-SHA 256
