@@ -32,7 +32,8 @@ exports.user_login = (req, res, next) => {
         // original, working code
         // const cert = fs.readFileSync('jwtRS256.key.private');
         //console.log('JWT environment variable: ' + process.env.JWT_PRIVATE_KEY);
-        const cert = String(fs.readFileSync(process.env.JWT_PRIVATE_KEY));
+        //const cert = String(fs.readFileSync(process.env.JWT_PRIVATE_KEY));
+		const cert = process.env.JWT_PRIVATE_KEY;
         //const cert = fs.readFileSync(process.env.JWT_PRIVATE_KEY);
         // call JWT and use the sign method
 
