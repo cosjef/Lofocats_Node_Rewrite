@@ -44,7 +44,7 @@ exports.user_login = (req, res, next) => {
             },
             cert, { algorithm: 'RS256' }
         );
-        console.log(token);
+        // console.log(token);
         res.status(200).send({ auth: true, token: token });
     });
 };
