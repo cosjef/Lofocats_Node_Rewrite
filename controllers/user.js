@@ -28,7 +28,10 @@ exports.user_login = (req, res, next) => {
         // sign JWT with RSA-SHA 256
         // get private key
         var fs = require("fs");
-        const cert = fs.readFileSync('jwtRS256.key.private');
+        // call the private key
+        // original, working code
+        // const cert = fs.readFileSync('jwtRS256.key.private');
+        const cert = fs.readFileSync(process.env.JWT_PRIVATE_KEY);
         // call JWT and use the sign method
 
         const token = jwt.sign(
