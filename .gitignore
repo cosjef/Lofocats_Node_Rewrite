@@ -4,6 +4,8 @@
 +# next.js build output
 +.next
 
+jwtRS256.key.private
+
 /node_modules
 npm-debug.log
 .DS_Store
