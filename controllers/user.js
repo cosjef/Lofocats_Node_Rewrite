@@ -87,7 +87,8 @@ exports.user_signup = function (req, res) {
 
 };
 
-
+/*
+// working code
 // get all users in database
 exports.get_all_users = function (req, res) {
     User.find(function (err, user) {
@@ -98,6 +99,26 @@ exports.get_all_users = function (req, res) {
 
     });
 };
+*/
+
+// get all users in database
+exports.get_all_users = function (req, res) {
+    // console.log('Value in authorization header: '+ req.headers.authorization);
+    const apiKey = req.get('authorization'); 
+    // console.log('This is the API-key: ' + apiKey)
+    if (!apiKey || apiKey !== process.env.API_KEY) {
+        res.status(401).json({ error: 'Incorrect API key. Access DENIED!'})
+    } else {
+    User.find(function (err, user) {
+        if (err) {
+            res.send(err);
+        }
+        res.json(user);
+
+    });
+}
+};
+
 
 
 
