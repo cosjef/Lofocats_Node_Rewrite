@@ -88,7 +88,16 @@ exports.user_signup = function (req, res) {
 };
 
 
+// get all users in database
+exports.get_all_users = function (req, res) {
+    User.find(function (err, user) {
+        if (err) {
+            res.send(err);
+        }
+        res.json(user);
 
+    });
+};
 
 
 
