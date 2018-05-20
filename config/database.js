@@ -8,9 +8,16 @@ var mongoose = require('mongoose');
 var MONGODB_URI = 'mongodb://heroku_v7rrqxpd:av32e55onb7cjml9pienpgv78k@ds247648.mlab.com:47648/heroku_v7rrqxpd';
 
 // Create the database connection
-mongoose.connect(MONGODB_URI, {
-    useMongoClient: true
-});
+// DEPRECATED USE OF useMongoClient no longer needed in mongoose 5.x
+//mongoose.connect(MONGODB_URI, {
+//    useMongoClient: true
+//});
+
+
+// Create the database connection
+mongoose.connect(MONGODB_URI);
+
+
 
 // get Mongoose to use the global promise library
 mongoose.Promise = global.Promise;
