@@ -24,8 +24,8 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 // add caching
-// const apicache = require('apicache');
-// const cache = apicache.middleware;
+const apicache = require('apicache');
+const cache = apicache.middleware;
 
 // =======================================================================================================================
 // Routes are listed below
@@ -35,8 +35,8 @@ router.use(bodyParser.json());
 router.post('/', catController.cat_create_cat);
 router.get('/:id', catController.get_one_cat);
 router.put('/:id', catController.update_a_cat);
-router.get('/', catController.get_all_cats);
-//router.get('/', cache('5 minutes'), catController.get_all_cats);
+//router.get('/', catController.get_all_cats);
+router.get('/', cache('5 minutes'), catController.get_all_cats);
 router.delete('/:id', catController.delete_a_cat);
 router.post('/import', catController.import_cats);
 
