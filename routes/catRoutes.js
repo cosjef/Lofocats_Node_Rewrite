@@ -26,6 +26,7 @@ router.use(bodyParser.json());
 // add caching
 const apicache = require('apicache');
 const cache = apicache.middleware;
+apicache.options( {debug: true} );
 
 // =======================================================================================================================
 // Routes are listed below
